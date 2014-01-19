@@ -1,0 +1,5 @@
+#!/bin/sh
+connection=$1 #connection to drop, if not specified all pppd istances will be killed
+echo "disconnecting..."
+poff $connection
+echo "...done"

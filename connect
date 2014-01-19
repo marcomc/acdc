@@ -1,0 +1,29 @@
+#!/bin/sh
+
+ADDRESS=$(which address)
+connector=$1 #peer connection script
+/usr/sbin/pppd call $connector
+interface=ppp0
+#try connection
+echo "starting connection..."
+while  [ $($ADDRESS $interface &> /dev/null;echo $?) -ne 0 ]; do
+    #verify if interface is already setuped
+    if [ $(ps aux | grep -q pppd; echo $?) -eq 0 ]; then
+        #verify if pppd daemon is already active for another connection
+        sleep 1
+        echo -n "."
+        #print dots as time counter
+    else
+        #if connection procedure is interrupted inaspectately
+        echo -e "\n...connection ERROR!!\n"
+        exit 1        
+    fi
+done
+#if all is OK
+echo -e "\n...wait some seconds please..."
+sleep 5 #wait for system update 
+echo -e "...connection established correctly!\n"
+echo -e "IP address on interface $interface is: $($ADDRESS $interface)\n"
+exit 0
+
+

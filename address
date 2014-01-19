@@ -1,0 +1,11 @@
+#!/bin/sh
+
+interface=$1 #if not specified all address will be displayed
+
+device_is_present=$(/sbin/ifconfig $interface &> /dev/null ; echo $?)
+#verifica se l'interfeccia e' presente o meno
+if [ $device_is_present == 0 ] ;then
+    #if interface is present
+    /sbin/ifconfig $interface | grep inet | tr -t " " "\n" | grep addr | tr -d [Aa-zZ:]
+fi
+exit $device_is_present; #return if this script had success or not
